@@ -49,7 +49,7 @@ buildStatistics(Node, Statistics) :-
     (   node(Node, _, GValue),
         recursiveBuildStatistics(GValue, [], StatisticsBuffer),
         reverse(StatisticsBuffer, Statistics)
-    ;   copy_term([stat(0, 0, 0, 1)], Statistics)
+    ;   recursiveBuildStatistics(0, [], Statistics)
     ).
 
 recursiveBuildSolution(Node, PrevPath, Path) :-
