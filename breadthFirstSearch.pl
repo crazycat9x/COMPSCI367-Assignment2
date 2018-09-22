@@ -9,7 +9,6 @@ doesntPointToExisting(Node) :-
 
 addNeighboursToQueue([(_, N)],  (Parent, GValue), Queue, NewQueue) :-
     (   doesntPointToExisting(N),
-        incrementCounter(GValue, expanded),
         assert(node(N, Parent, GValue)),
         join_queue((N, GValue), Queue, NewQueue)
     ;   incrementCounter(GValue, duplicated),
@@ -18,7 +17,6 @@ addNeighboursToQueue([(_, N)],  (Parent, GValue), Queue, NewQueue) :-
 
 addNeighboursToQueue([(_, N)|T],  (Parent, GValue), Queue, NewQueue) :-
     (   doesntPointToExisting(N),
-        incrementCounter(GValue, expanded),
         assert(node(N, Parent, GValue)),
         join_queue((N, GValue), Queue, TempNewQueue),
         addNeighboursToQueue(T,
@@ -71,6 +69,7 @@ recursiveBFS(OpenList, Solution, Statistics) :-
 
 recursiveBFS(OpenList, Solution, Statistics) :-
     serve_queue(OpenList,  (Expanding, PrevGValue), NewOpenList),
+    incrementCounter(PrevGValue, expanded),
     plus(PrevGValue, 1, GValue),
     succ8(Expanding, Neighbours),
     length(Neighbours, Generated),
@@ -81,7 +80,6 @@ recursiveBFS(OpenList, Solution, Statistics) :-
 breadthFirstSearch(InitialState, Solution, Statistics) :-
     make_queue(OpenList),
     join_queue((InitialState, 0), OpenList, NewOpenList),
-    incrementCounter(0, expanded),
     once(recursiveBFS(NewOpenList, Solution, Statistics)),
     retractall(node(_, _, _)),
     retractall(counter(_, _, _)).
