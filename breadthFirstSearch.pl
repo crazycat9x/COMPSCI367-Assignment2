@@ -32,8 +32,6 @@ addNeighboursToQueue([(_, N)|T],  (Parent, GValue), Queue, NewQueue) :-
                              NewQueue)
     ).
 
-
-
 recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
     (   GValue>=0,
         getValueCounter(GValue, generated, Generated),
@@ -48,9 +46,11 @@ recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
     ).
 
 buildStatistics(Node, Statistics) :-
-    node(Node, _, GValue),
-    recursiveBuildStatistics(GValue, [], StatisticsBuffer),
-    reverse(StatisticsBuffer, Statistics).
+    (   node(Node, _, GValue),
+        recursiveBuildStatistics(GValue, [], StatisticsBuffer),
+        reverse(StatisticsBuffer, Statistics)
+    ;   copy_term([stat(0, 0, 0, 1)], Statistics)
+    ).
 
 recursiveBuildSolution(Node, PrevPath, Path) :-
     (   node(Node, Parent, _),
