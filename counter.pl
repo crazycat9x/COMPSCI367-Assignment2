@@ -1,6 +1,6 @@
 /* -*-prolog-*- */
 
-:- dynamic count/3.
+:- dynamic counter/3.
 
 /*
 counter predicates
