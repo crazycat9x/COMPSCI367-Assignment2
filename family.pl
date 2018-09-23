@@ -17,7 +17,7 @@ ancestorOf(Anc,Pre) :-
   childOf(X,Anc), ancestorOf(X,Pre).
 
 inSameTree(Person1, Person2) :-
-  Person1 = Person2;
+  Person1 == Person2;
   ancestorOf(Person2, Person1);
   ancestorOf(Person1, Person2);
   ancestorOf(Anc,Person1), ancestorOf(Anc,Person2).
