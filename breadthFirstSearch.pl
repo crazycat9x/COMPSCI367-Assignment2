@@ -1,23 +1,21 @@
 :- consult(counter).
 :- consult(queues).
 :- consult(eightPuzzle).
-:- (dynamic node/3).
-
-doesntPointToExisting(Node) :-
-    \+ node(Node, _, _),
-    \+ node(_, Node, _).
+:- (dynamic node/2, parentOf/2).
 
 addNeighboursToQueue([(_, N)], Parent, GValue, Queue, NewQueue) :-
-    (   doesntPointToExisting(N),
-        assert(node(N, Parent, GValue)),
+    (   \+ node(N, _),
+        assert(node(N, GValue)),
+        assert(parentOf(Parent, N)),
         join_queue((N, GValue), Queue, NewQueue)
     ;   incrementCounter(GValue, duplicated),
         copy_term(Queue, NewQueue)
     ).
 
 addNeighboursToQueue([(_, N)|T], Parent, GValue, Queue, NewQueue) :-
-    (   doesntPointToExisting(N),
-        assert(node(N, Parent, GValue)),
+    (   \+ node(N, _),
+        assert(node(N, GValue)),
+        assert(parentOf(Parent, N)),
         join_queue((N, GValue), Queue, TempNewQueue),
         addNeighboursToQueue(T,
                              Parent,
@@ -46,14 +44,14 @@ recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
     ).
 
 buildStatistics(Node, Statistics) :-
-    (   node(Node, _, GValue),
+    (   node(Node, GValue),
         recursiveBuildStatistics(GValue, [], StatisticsBuffer),
         reverse(StatisticsBuffer, Statistics)
     ;   recursiveBuildStatistics(0, [], Statistics)
     ).
 
 recursiveBuildSolution(Node, PrevPath, Path) :-
-    (   node(Node, Parent, _),
+    (   parentOf(Parent, Node),
         append(PrevPath, [Parent], NextPath),
         recursiveBuildSolution(Parent, NextPath, Path)
     ;   copy_term(PrevPath, Path)
@@ -80,8 +78,10 @@ recursiveBFS(OpenList, Solution, Statistics) :-
     recursiveBFS(NewOpenList2, Solution, Statistics).
 
 breadthFirstSearch(InitialState, Solution, Statistics) :-
+    assert(node(InitialState, 0)),
     make_queue(OpenList),
     join_queue((InitialState, 0), OpenList, NewOpenList),
     once(recursiveBFS(NewOpenList, Solution, Statistics)),
-    retractall(node(_, _, _)),
+    retractall(parentOf(_, _)),
+    retractall(node(_, _)),
     retractall(counter(_, _, _)).
