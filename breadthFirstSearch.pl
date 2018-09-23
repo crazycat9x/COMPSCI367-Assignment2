@@ -82,6 +82,6 @@ breadthFirstSearch(InitialState, Solution, Statistics) :-
     make_queue(OpenList),
     join_queue((InitialState, 0), OpenList, NewOpenList),
     once(recursiveBFS(NewOpenList, Solution, Statistics)),
-    retractall(parentOf(_, _)),
     retractall(node(_, _)),
+    retractall(parentOf(_, _)),
     retractall(counter(_, _, _)).
