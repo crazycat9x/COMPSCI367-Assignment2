@@ -31,16 +31,17 @@ addNeighboursToQueue([(_, N)|T], Parent, GValue, Queue, NewQueue) :-
     ).
 
 recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
-    (   GValue>=0,
-        getValueCounter(GValue, generated, Generated),
-        getValueCounter(GValue, expanded, Expanded),
-        getValueCounter(GValue, duplicated, Duplicated),
-        append(CurrStatistics,
-               [stat(GValue, Generated, Duplicated, Expanded)],
-               NewStatistics),
-        plus(GValue, -1, NextGValue),
+    ( getValueCounter(GValue, generated, Generated),
+      getValueCounter(GValue, expanded, Expanded),
+      getValueCounter(GValue, duplicated, Duplicated),
+      append(CurrStatistics,
+             [stat(GValue, Generated, Duplicated, Expanded)],
+             NewStatistics),
+      plus(GValue, -1, NextGValue)
+    ),
+    (   NextGValue>=0,
         recursiveBuildStatistics(NextGValue, NewStatistics, Statistics)
-    ;   copy_term(CurrStatistics, Statistics)
+    ;   copy_term(NewStatistics, Statistics)
     ).
 
 buildStatistics(Node, Statistics) :-
