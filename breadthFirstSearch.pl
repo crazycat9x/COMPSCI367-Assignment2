@@ -7,7 +7,7 @@ doesntPointToExisting(Node) :-
     \+ node(Node, _, _),
     \+ node(_, Node, _).
 
-addNeighboursToQueue([(_, N)],  (Parent, GValue), Queue, NewQueue) :-
+addNeighboursToQueue([(_, N)], Parent, GValue, Queue, NewQueue) :-
     (   doesntPointToExisting(N),
         assert(node(N, Parent, GValue)),
         join_queue((N, GValue), Queue, NewQueue)
@@ -15,17 +15,19 @@ addNeighboursToQueue([(_, N)],  (Parent, GValue), Queue, NewQueue) :-
         copy_term(Queue, NewQueue)
     ).
 
-addNeighboursToQueue([(_, N)|T],  (Parent, GValue), Queue, NewQueue) :-
+addNeighboursToQueue([(_, N)|T], Parent, GValue, Queue, NewQueue) :-
     (   doesntPointToExisting(N),
         assert(node(N, Parent, GValue)),
         join_queue((N, GValue), Queue, TempNewQueue),
         addNeighboursToQueue(T,
-                             (Parent, GValue),
+                             Parent,
+                             GValue,
                              TempNewQueue,
                              NewQueue)
     ;   incrementCounter(GValue, duplicated),
         addNeighboursToQueue(T,
-                             (Parent, GValue),
+                             Parent,
+                             GValue,
                              Queue,
                              NewQueue)
     ).
@@ -74,7 +76,7 @@ recursiveBFS(OpenList, Solution, Statistics) :-
     succ8(Expanding, Neighbours),
     length(Neighbours, Generated),
     addToCounter(GValue, generated, Generated),
-    addNeighboursToQueue(Neighbours,  (Expanding, GValue), NewOpenList, NewOpenList2),
+    addNeighboursToQueue(Neighbours, Expanding, GValue, NewOpenList, NewOpenList2),
     recursiveBFS(NewOpenList2, Solution, Statistics).
 
 breadthFirstSearch(InitialState, Solution, Statistics) :-
