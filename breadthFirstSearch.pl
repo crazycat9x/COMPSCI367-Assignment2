@@ -62,20 +62,22 @@ buildSolution(Solution, Path) :-
     reverse(PathBuffer, Path).
 
 recursiveBFS(OpenList, Solution, Statistics) :-
-    serve_queue(OpenList,  (Expanding, _), _),
-    goal8(Expanding),
-    buildSolution(Expanding, Solution),
-    buildStatistics(Expanding, Statistics).
-
-recursiveBFS(OpenList, Solution, Statistics) :-
     serve_queue(OpenList,  (Expanding, PrevGValue), NewOpenList),
-    incrementCounter(PrevGValue, expanded),
-    plus(PrevGValue, 1, GValue),
-    succ8(Expanding, Neighbours),
-    length(Neighbours, Generated),
-    addToCounter(GValue, generated, Generated),
-    addNeighboursToQueue(Neighbours, Expanding, GValue, NewOpenList, NewOpenList2),
-    recursiveBFS(NewOpenList2, Solution, Statistics).
+    (   goal8(Expanding),
+        buildSolution(Expanding, Solution),
+        buildStatistics(Expanding, Statistics)
+    ;   incrementCounter(PrevGValue, expanded),
+        plus(PrevGValue, 1, GValue),
+        succ8(Expanding, Neighbours),
+        length(Neighbours, Generated),
+        addToCounter(GValue, generated, Generated),
+        addNeighboursToQueue(Neighbours,
+                             Expanding,
+                             GValue,
+                             NewOpenList,
+                             NewOpenList2),
+        recursiveBFS(NewOpenList2, Solution, Statistics)
+    ).
 
 breadthFirstSearch(InitialState, Solution, Statistics) :-
     assert(node(InitialState, 0)),
