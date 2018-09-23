@@ -44,11 +44,9 @@ recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
     ).
 
 buildStatistics(Node, Statistics) :-
-    (   node(Node, GValue),
-        recursiveBuildStatistics(GValue, [], StatisticsBuffer),
-        reverse(StatisticsBuffer, Statistics)
-    ;   recursiveBuildStatistics(0, [], Statistics)
-    ).
+    node(Node, GValue),
+    recursiveBuildStatistics(GValue, [], StatisticsBuffer),
+    reverse(StatisticsBuffer, Statistics).
 
 recursiveBuildSolution(Node, PrevPath, Path) :-
     (   parentOf(Parent, Node),
