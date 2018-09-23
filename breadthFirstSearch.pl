@@ -9,7 +9,7 @@ addNeighboursToQueue([(_, N)], Parent, GValue, Queue, NewQueue) :-
         assert(parentOf(Parent, N)),
         join_queue((N, GValue), Queue, NewQueue)
     ;   incrementCounter(GValue, duplicated),
-        copy_term(Queue, NewQueue)
+        Queue=NewQueue
     ).
 
 addNeighboursToQueue([(_, N)|T], Parent, GValue, Queue, NewQueue) :-
@@ -41,11 +41,10 @@ recursiveBuildStatistics(GValue, CurrStatistics, Statistics) :-
     ),
     (   NextGValue>=0,
         recursiveBuildStatistics(NextGValue, NewStatistics, Statistics)
-    ;   copy_term(NewStatistics, Statistics)
+    ;   NewStatistics=Statistics
     ).
 
-buildStatistics(Node, Statistics) :-
-    node(Node, GValue),
+buildStatistics(GValue, Statistics) :-
     recursiveBuildStatistics(GValue, [], StatisticsBuffer),
     reverse(StatisticsBuffer, Statistics).
 
@@ -53,7 +52,7 @@ recursiveBuildSolution(Node, PrevPath, Path) :-
     (   parentOf(Parent, Node),
         append(PrevPath, [Parent], NextPath),
         recursiveBuildSolution(Parent, NextPath, Path)
-    ;   copy_term(PrevPath, Path)
+    ;   PrevPath=Path
     ).
 
 buildSolution(Goal, Solution) :-
@@ -64,7 +63,7 @@ recursiveBFS(OpenList, Solution, Statistics) :-
     serve_queue(OpenList,  (Expanding, PrevGValue), NewOpenList),
     (   goal8(Expanding),
         buildSolution(Expanding, Solution),
-        buildStatistics(Expanding, Statistics)
+        buildStatistics(PrevGValue, Statistics)
     ;   incrementCounter(PrevGValue, expanded),
         plus(PrevGValue, 1, GValue),
         succ8(Expanding, Neighbours),
