@@ -56,9 +56,9 @@ recursiveBuildSolution(Node, PrevPath, Path) :-
     ;   copy_term(PrevPath, Path)
     ).
 
-buildSolution(Solution, Path) :-
-    recursiveBuildSolution(Solution, [Solution], PathBuffer),
-    reverse(PathBuffer, Path).
+buildSolution(Goal, Solution) :-
+    recursiveBuildSolution(Goal, [Goal], SolutionBuffer),
+    reverse(SolutionBuffer, Solution).
 
 recursiveBFS(OpenList, Solution, Statistics) :-
     serve_queue(OpenList,  (Expanding, PrevGValue), NewOpenList),
