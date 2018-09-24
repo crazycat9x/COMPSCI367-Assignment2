@@ -10,7 +10,7 @@ sisterOf(Sister, Person) :-
     Sister\==Person,
     female(Sister),
     childOf(Person, Parent),
-    childOf(Sister, Parent).
+    childOf(Sister, Parent), !.
 
 % Ax,y((ChildOf(y,x) or Ez(ChildOf(z,x) and AncestorOf(z,y))) iff AncestorOf(x,y))
 ancestorOf(Anc, Pre) :-
