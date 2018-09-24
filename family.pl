@@ -17,7 +17,7 @@ ancestorOf(Anc, Pre) :-
     (   childOf(Pre, Anc)
     ;   childOf(X, Anc),
         ancestorOf(X, Pre)
-    ).
+    ), !.
 
 % Ax,y((x = y or AncestorOf(x,y) or AncestorOf(y,x) or Ez(AncestorOf(z,x) and Ancestor(z,y))) iff InSameTree(x,y))
 inSameTree(Person1, Person2) :-
@@ -26,4 +26,4 @@ inSameTree(Person1, Person2) :-
     ;   ancestorOf(Person1, Person2)
     ;   ancestorOf(Anc, Person1),
         ancestorOf(Anc, Person2)
-    ).
+    ), !.
