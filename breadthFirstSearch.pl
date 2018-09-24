@@ -1,7 +1,7 @@
 :- consult(counter).
 :- consult(queues).
 :- consult(eightPuzzle).
-:- (dynamic node/2, parentOf/2).
+:- (dynamic node/2, parentOf/2, counter/3).
 
 addNeighboursToQueue([(_, N)], Parent, GValue, Queue, NewQueue) :-
     (   \+ node(N, _),
