@@ -5,6 +5,7 @@ motherOf(Mom, Child) :-
     childOf(Child, Mom).
 
 sisterOf(Sister, Person) :-
+    Sister\==Person,
     female(Sister),
     childOf(Person, Parent),
     childOf(Sister, Parent).
