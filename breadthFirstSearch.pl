@@ -60,18 +60,18 @@ buildSolution(Goal, Solution) :-
     reverse(SolutionBuffer, Solution).
 
 recursiveBFS(OpenList, Solution, Statistics) :-
-    serve_queue(OpenList,  (Expanding, PrevGValue), NewOpenList),
+    serve_queue(OpenList,  (Expanding, ExpandedGValue), NewOpenList),
     (   goal8(Expanding),
         buildSolution(Expanding, Solution),
-        buildStatistics(PrevGValue, Statistics)
-    ;   incrementCounter(PrevGValue, expanded),
-        plus(PrevGValue, 1, GValue),
+        buildStatistics(ExpandedGValue, Statistics)
+    ;   incrementCounter(ExpandedGValue, expanded),
+        plus(ExpandedGValue, 1, GeneratedGValue),
         succ8(Expanding, Neighbours),
         length(Neighbours, Generated),
-        addToCounter(GValue, generated, Generated),
+        addToCounter(GeneratedGValue, generated, Generated),
         addNeighboursToQueue(Neighbours,
                              Expanding,
-                             GValue,
+                             GeneratedGValue,
                              NewOpenList,
                              NewOpenList2),
         recursiveBFS(NewOpenList2, Solution, Statistics)
